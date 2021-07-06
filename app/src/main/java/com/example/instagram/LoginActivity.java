@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
+                loginUser(username, password);
             }
         });
     }
