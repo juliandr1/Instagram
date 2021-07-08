@@ -58,4 +58,13 @@
         android:ems="10"
         android:hint="Description..."
         android:inputType="textPersonName" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:id="@+id/bottom_navigation"
+        app:menu="@menu/menu_navigation"
+        app:itemBackground="@color/black"
+        app:itemIconTint="@color/white"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

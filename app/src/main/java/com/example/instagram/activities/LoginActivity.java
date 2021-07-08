@@ -1,4 +1,4 @@
-package com.example.instagram;
+package com.example.instagram.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.instagram.R;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, TimelineActivity.class);
         startActivity(intent);
     }
 }
