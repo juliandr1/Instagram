@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="212dp"
+        android:layout_marginEnd="0dp"
+        android:text="LOGOUT" />
+
+    <ImageView
+        android:id="@+id/ivProfilePic"
+        android:layout_width="159dp"
+        android:layout_height="159dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvNumPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="27dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/ivProfilePic"
+        tools:text="2" />
+
+    <TextView
+        android:id="@+id/tvNumFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/tvNumPosts"
+        tools:text="15" />
+
+    <TextView
+        android:id="@+id/tvNumFollowing"
+        android:layout_width="23dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="30dp"
+        android:layout_toEndOf="@+id/tvNumFollowers"
+        tools:text="68" />
+
+    <TextView
+        android:id="@+id/tvProfileDescription"
+        android:layout_width="349dp"
+        android:layout_height="43dp"
+        android:layout_below="@+id/ivProfilePic"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="11dp" />
+
+    <TextView
+        android:id="@+id/tvFollowers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNumFollowers"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/tvPosts"
+        android:text="Followers" />
+
+    <TextView
+        android:id="@+id/tvFollowing"
+        android:layout_width="62dp"
+        android:layout_height="31dp"
+        android:layout_below="@+id/tvNumFollowing"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/tvFollowers"
+        android:text="Following" />
+
+    <TextView
+        android:id="@+id/tvPosts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvNumPosts"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/ivProfilePic"
+        android:text="Posts" />
+
+    <TableLayout
+        android:id="@+id/tlPics"
+        android:layout_width="match_parent"
+        android:layout_height="319dp"
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_below="@+id/btnLogOut"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="3dp"></TableLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/black"
+        app:itemIconTint="@color/white"
+        app:menu="@menu/menu_navigation" />
+</RelativeLayout>

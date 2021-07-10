@@ -1,13 +1,10 @@
 package com.example.instagram;
 
 import android.app.Application;
-import android.util.Log;
 
+import com.example.instagram.models.Post;
 import com.parse.Parse;
 import com.parse.ParseObject;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 
 public class ParseApplication extends Application {
 

@@ -15,21 +15,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
-
 import com.example.instagram.BitmapScaler;
-import com.example.instagram.Post;
+import com.example.instagram.models.Post;
 import com.example.instagram.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
 import java.io.File;
+
+/*
+    PostActivity.java is an activity which allows users to post a picture with their camera,
+    along with a description.
+ */
 
 public class PostActivity extends AppCompatActivity {
 
@@ -37,15 +37,10 @@ public class PostActivity extends AppCompatActivity {
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
 
     public String photoFileName = "photo.jpg";
-
     private File photoFile;
-
     private EditText etDescription;
     private ImageView ivPostImage;
-    private Button btnCaptureImage, btnSubmit;
     private Context context;
-
-    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,51 +51,47 @@ public class PostActivity extends AppCompatActivity {
 
         etDescription = findViewById(R.id.etDescription);
         ivPostImage = findViewById(R.id.ivPostImage);
-        btnCaptureImage = findViewById(R.id.btnCaptureImage);
-        btnSubmit = findViewById(R.id.btnSubmit);
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        // Setup the bottom navigation view for the activity and outline the flow
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.post);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.timeline:
-                        Log.i(TAG,"post -> timeline");
-                        startActivity(new Intent(context, TimelineActivity.class));
-                        return true;
-                    case R.id.logout:
-                        Log.i(TAG,"post -> logout");
-                        startActivity(new Intent(context, LogoutActivity.class));
-                        return true;
-                }
-                return false;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.timeline:
+                    Log.i(TAG,"post -> timeline");
+                    startActivity(new Intent(context, TimelineActivity.class));
+                    return true;
+                case R.id.profile:
+                    Log.i(TAG,"post -> logout");
+                    startActivity(new Intent(context, ProfileActivity.class));
+                    return true;
             }
+            return false;
         });
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String description = etDescription.getText().toString();
-                Log.i(TAG,"clicked");
-                if (description.isEmpty()) {
-                    Toast.makeText(PostActivity.this, "Description cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (photoFile == null || ivPostImage.getDrawable() == null) {
-                    Toast.makeText(PostActivity.this, "There is no image!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                ParseUser currentUser = ParseUser.getCurrentUser();
-                savePost(description, currentUser, photoFile);
+        // Post the post with an image and a description
+        Button btnSubmit = findViewById(R.id.btnSubmit);
+        btnSubmit.setOnClickListener(v -> {
+            String description = etDescription.getText().toString();
+            // Check to see if description is empty
+            if (description.isEmpty()) {
+                Toast.makeText(PostActivity.this, "Description cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            if (photoFile == null || ivPostImage.getDrawable() == null) {
+                Toast.makeText(PostActivity.this, "There is no image!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            savePost(description, currentUser, photoFile);
         });
 
+        Button btnCaptureImage = findViewById(R.id.btnCaptureImage);
         btnCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchCamera(v);
+                launchCamera();
             }
         });
 
@@ -117,7 +108,7 @@ public class PostActivity extends AppCompatActivity {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // See BitmapScaler.java: https://gist.github.com/nesquena/3885707fd3773c09f1bb
                 Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(takenImage, 350);
-                ivPostImage.setImageBitmap(takenImage);
+                ivPostImage.setImageBitmap(resizedBitmap);
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -137,12 +128,11 @@ public class PostActivity extends AppCompatActivity {
         }
 
         // Return the file target for the photo based on filename
-        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
 
-        return file;
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    private void launchCamera(View view) {
+    private void launchCamera() {
 
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -167,18 +157,15 @@ public class PostActivity extends AppCompatActivity {
         post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
         post.setUser(currentUser);
-        post.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error while saving", e);
-                    Toast.makeText(PostActivity.this, "Error while saving", Toast.LENGTH_SHORT).show();
-                }
-                Log.i(TAG, "Post save was successful!");
-                etDescription.setText("");
-                ivPostImage.setImageResource(0);
-                startActivity(new Intent(context, TimelineActivity.class));
+        post.saveInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Error while saving", e);
+                Toast.makeText(PostActivity.this, "Error while saving", Toast.LENGTH_SHORT).show();
             }
+            Log.i(TAG, "Post save was successful!");
+            etDescription.setText("");
+            ivPostImage.setImageResource(0);
+            startActivity(new Intent(context, TimelineActivity.class));
         });
     }
 

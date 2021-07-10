@@ -7,12 +7,19 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <queries>
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
+
     <application
         android:name=".ParseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/instagramlogo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/instagramlogo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Instagram">
 
@@ -36,9 +43,11 @@
         </activity>
         <activity android:name=".activities.PostActivity">
         </activity>
-        <activity android:name=".activities.LogoutActivity">
+        <activity android:name=".activities.ProfileActivity">
         </activity>
         <activity android:name=".activities.DetailActivity">
+        </activity>
+        <activity android:name=".activities.RegisterActivity">
         </activity>
 
     </application>

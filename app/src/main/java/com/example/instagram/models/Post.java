@@ -1,4 +1,4 @@
-package com.example.instagram;
+package com.example.instagram.models;
 
 import android.util.Log;
 
@@ -7,15 +7,22 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import org.parceler.Parcel;
+import org.json.JSONArray;
+import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @ParseClassName("Post")
 public class Post extends ParseObject {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_USER = "user";
+    public static final String KEY_LIKED = "usersLiked";
+    public static final String KEY_NUM_LIKED = "numLikes";
+    public static final String TAG = "Post";
 
     public String getDescription() {
         return getString(KEY_DESCRIPTION);
@@ -41,8 +48,43 @@ public class Post extends ParseObject {
         put(KEY_USER, user);
     }
 
-    public static String calculateTimeAgo(Date createdAt) {
+    public int getNumLikes() { return getNumber("numLikes").intValue(); }
 
+    public void setLikes(int numLikes) {
+        put(KEY_NUM_LIKED, numLikes);
+    }
+
+    public JSONArray getLikes() {return getJSONArray(KEY_LIKED);}
+
+    public void like(ParseUser user) {
+        add(KEY_LIKED, user.getObjectId());
+        setLikes(getNumLikes() + 1);
+        saveInBackground();
+    }
+
+    public void unlike(ParseUser user) {
+        removeAll(KEY_LIKED, Arrays.asList(user.getObjectId()));
+        if (getNumLikes() > 0) {
+            setLikes(getNumLikes() - 1);
+        }
+        saveInBackground();
+    }
+
+    public boolean didLike(ParseUser user) throws JSONException {
+        JSONArray jsonArray = getLikes();
+
+        // Check if the likes list is null
+        if (jsonArray == null) {
+            Log.i(TAG, "Empty");
+            return false;
+        }
+
+        // Get the list of userIds and check if the current user has liked the post.
+        List<String> userIds = Post.fromJsonArray(jsonArray);
+        return userIds.contains(user.getObjectId());
+    }
+
+    public static String calculateTimeAgo(Date createdAt) {
         int SECOND_MILLIS = 1000;
         int MINUTE_MILLIS = 60 * SECOND_MILLIS;
         int HOUR_MILLIS = 60 * MINUTE_MILLIS;
@@ -75,5 +117,19 @@ public class Post extends ParseObject {
         }
 
         return "";
+    }
+
+    public static List<String> fromJsonArray(JSONArray jsonArray) throws JSONException {
+        List<String> likedUsers = new ArrayList<>();
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            likedUsers.add(fromJson(jsonArray.get(i)));
+        }
+
+        return likedUsers;
+    }
+
+    public static String fromJson(Object object) throws JSONException {
+        return object.toString();
     }
 }

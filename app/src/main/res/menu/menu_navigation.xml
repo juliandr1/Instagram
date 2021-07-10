@@ -4,16 +4,16 @@
     <item
         android:id="@+id/timeline"
         android:title=""
-        android:icon="@drawable/ic_baseline_home_24"/>
+        android:icon="@drawable/home_selector"/>
 
     <item
         android:id="@+id/post"
         android:title=""
-        android:icon="@drawable/ic_baseline_post_add_24"/>
+        android:icon="@drawable/post_selector"/>
 
     <item
-        android:id="@+id/logout"
+        android:id="@+id/profile"
         android:title=""
-        android:icon="@drawable/ic_baseline_settings_24"/>
+        android:icon="@drawable/profile_selector"/>
 
 </menu>

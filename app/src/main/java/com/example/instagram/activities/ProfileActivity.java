@@ -7,27 +7,36 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.ImageView;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.instagram.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.Parse;
 import com.parse.ParseUser;
 
+/*
+     ProfileActivity.java is not finished, but it is meant to be the profile page of a user,
+     feauturing their key stats (followers, following, posts, etc).
+ */
 
-public class LogoutActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
-    public static final String TAG = "LogoutActivity";
+    public static final String TAG = "ProfileActivity";
 
     Button btnLogOut;
     Context context;
     BottomNavigationView bottomNavigationView;
+    ImageView ivProfilePic;
+    TextView numPosts, numFollowers, numFollowing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logout);
+        setContentView(R.layout.activity_profile);
         btnLogOut = findViewById(R.id.btnLogOut);
 
         context = this;
@@ -42,7 +51,7 @@ public class LogoutActivity extends AppCompatActivity {
         });
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.logout);
+        bottomNavigationView.setSelectedItemId(R.id.profile);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -59,5 +68,9 @@ public class LogoutActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        ivProfilePic = findViewById(R.id.ivProfilePic);
+        ParseUser user = ParseUser.getCurrentUser();
+        Glide.with(context).load(user.getParseFile("profilePic").getUrl()).transform(new RoundedCorners(300)).into(ivProfilePic);
     }
 }
